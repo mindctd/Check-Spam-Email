@@ -1,70 +1,64 @@
 import pandas as pd
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
-# --- ฟังก์ชันสำหรับโหลดข้อมูล ---
-def load_cleaned_data(file_path):
-    try:
-        data = pd.read_csv(file_path)
-        print("ข้อมูลที่โหลดมา:")
-        print(data.head())
-        return data
-    except Exception as e:
-        print(f"เกิดข้อผิดพลาดในการโหลดไฟล์: {e}")
-        return None
+# --- ฟังก์ชันตรวจสอบและแสดงข้อมูล Dataset ---
+def inspect_dataset(data):
+    print(f"\n📂 ข้อมูลตัวอย่างจากไฟล์ {cleaned_file}:")
+    print(data.head())
+    print("\n📊 สรุปข้อมูล:")
+    print(data.info())
+    print("\n📈 ค่าที่ไม่ซ้ำในคอลัมน์ 'spam':", data['spam'].unique())
 
-# --- ฟังก์ชันสำหรับ Tokenization และ Bag-of-Words ---
-def tokenize_and_add_bow(data, text_column):
-    print("\n--- แปลงข้อความเป็น Bag-of-Words ---")
-    vectorizer = CountVectorizer()
-    bow_matrix = vectorizer.fit_transform(data[text_column])
+# --- ฟังก์ชันปรับสมดุลข้อมูล ---
+def balance_data(data):
+    inspect_dataset(data)
 
-    # แปลง Matrix เป็น DataFrame
-    bow_df = pd.DataFrame(bow_matrix.toarray(), columns=vectorizer.get_feature_names_out())
-    print("Bag-of-Words DataFrame:")
-    print(bow_df.head())
+    if data.empty or 'spam' not in data.columns:
+        raise ValueError("❌ ไม่มีข้อมูลหรือไม่มีคอลัมน์ 'spam'")
 
-    # รวมคอลัมน์ใหม่กลับเข้า DataFrame เดิม
-    data = pd.concat([data.reset_index(drop=True), bow_df.reset_index(drop=True)], axis=1)
-    return data
+    spam_data = data[data['spam'] == 1]
+    not_spam_data = data[data['spam'] == 0]
 
-# --- ฟังก์ชันสำหรับ Tokenization และ TF-IDF ---
-def tokenize_and_add_tfidf(data, text_column):
-    print("\n--- แปลงข้อความเป็น TF-IDF ---")
-    vectorizer = TfidfVectorizer()
-    tfidf_matrix = vectorizer.fit_transform(data[text_column])
+    if spam_data.empty or not_spam_data.empty:
+        print("⚠️ พบข้อมูลขาดคลาส จะทำ Oversampling")
+        if spam_data.empty:
+            spam_data = not_spam_data.sample(n=1, replace=True, random_state=42)
+        if not_spam_data.empty:
+            not_spam_data = spam_data.sample(n=1, replace=True, random_state=42)
 
-    # แปลง Matrix เป็น DataFrame
-    tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=vectorizer.get_feature_names_out())
-    print("TF-IDF DataFrame:")
-    print(tfidf_df.head())
+    min_count = min(len(spam_data), len(not_spam_data))
+    spam = spam_data.sample(n=min_count, random_state=42)
+    not_spam = not_spam_data.sample(n=min_count, random_state=42)
 
-    # รวมคอลัมน์ใหม่กลับเข้า DataFrame เดิม
-    data = pd.concat([data.reset_index(drop=True), tfidf_df.reset_index(drop=True)], axis=1)
-    return data
-
-# --- ฟังก์ชันสำหรับบันทึกข้อมูล ---
-def save_updated_data(data, output_path):
-    try:
-        data.to_csv(output_path, index=False)
-        print(f"\nบันทึกข้อมูลที่อัปเดตแล้วที่: {output_path}")
-    except Exception as e:
-        print(f"เกิดข้อผิดพลาดในการบันทึกไฟล์: {e}")
+    balanced_data = pd.concat([spam, not_spam]).sample(frac=1, random_state=42).reset_index(drop=True)
+    print("\n📊 จำนวนแต่ละคลาสหลังปรับสมดุล:")
+    print(balanced_data['spam'].value_counts())
+    return balanced_data
 
 # --- การเรียกใช้งาน ---
 if __name__ == "__main__":
-    # ระบุไฟล์ที่ Clean แล้ว
-    cleaned_file = "cleaned_data.csv"  # ไฟล์ต้นฉบับที่ Clean แล้ว
-    updated_file = "updated_data.csv"  # ไฟล์ปลายทางหลังอัปเดต
+    cleaned_file = "cleaned_data.csv"
+    updated_file = "updated_data.csv"
 
-    # โหลดข้อมูล
-    df_cleaned = load_cleaned_data(cleaned_file)
+    try:
+        df_cleaned = pd.read_csv(cleaned_file)
+    except FileNotFoundError:
+        print(f"❌ ไม่พบไฟล์ '{cleaned_file}'")
+        exit(1)
 
-    if df_cleaned is not None:
-        # เพิ่มข้อมูล Bag-of-Words
-        df_with_bow = tokenize_and_add_bow(df_cleaned, 'text')
+    print("📋 ข้อมูลใน df_cleaned ก่อนการตรวจสอบ:")
+    print(df_cleaned.head())
+    print("\n📊 ค่าที่ไม่ซ้ำในคอลัมน์ 'spam':", df_cleaned['spam'].unique())
 
-        # เพิ่มข้อมูล TF-IDF
-        df_with_tfidf = tokenize_and_add_tfidf(df_cleaned, 'text')
+    # กรองข้อมูลให้เหลือเฉพาะค่า 0 หรือ 1
+    df_cleaned = df_cleaned[df_cleaned['spam'].isin(['0', '1'])]
+    df_cleaned['spam'] = df_cleaned['spam'].astype(int)
+    print("\n📊 ค่าที่ไม่ซ้ำหลังการแปลงเป็นตัวเลข:")
+    print(df_cleaned['spam'].unique())
 
-        # บันทึกข้อมูลที่อัปเดตแล้ว
-        save_updated_data(df_with_tfidf, updated_file)
+    df_balanced = balance_data(df_cleaned)
+    print("✅ ปรับสมดุลข้อมูลสำเร็จ")
+
+# --- บันทึกข้อมูลล่าสุดที่อัปเดตเป็นไฟล์ CSV ---
+df_balanced.to_csv("updated_data.csv", index=False)
+print("✅ บันทึกไฟล์ข้อมูลล่าสุดสำเร็จ: updated_data.csv")
