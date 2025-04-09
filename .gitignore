@@ -1,0 +1,15 @@
+# Secrets
+credentials.json
+token.json
+.env
+
+# Data files
+*.csv
+!keep_this_file.csv  # ถ้ามีไฟล์สำคัญที่ไม่อยาก ignore
+
+# Python cache
+__pycache__/
+*.pyc
+
+# VSCode
+.vscode/
