@@ -1,146 +1,83 @@
-# import time
-# from imapclient import IMAPClient
-# from Accuracy import vectorizer, model  # โหลดโมเดลที่ฝึกไว้
-# from GmailConnect import connect_imap, fetch_latest_email  # ใช้เชื่อมต่อ Gmail
-# from Popup import create_gui  # ใช้แสดง Popup แจ้งเตือน
-
-# # ตรวจสอบว่าโมเดลโหลดสำเร็จหรือไม่
-# if model and vectorizer:
-#     print("✅ โมเดลและ Vectorizer โหลดสำเร็จ!")
-# else:
-#     print("❌ โหลดโมเดลไม่สำเร็จ! ตรวจสอบไฟล์ Accuracy.py")
-#     exit()
-
-# def predict_spam(email_text):
-#     """ใช้โมเดลที่ฝึกไว้ทำนายว่าอีเมลเป็นสแปมหรือไม่"""
-#     X_new = vectorizer.transform([email_text])
-#     prediction = model.predict(X_new)[0]  # 1 = Spam, 0 = Not Spam
-#     return prediction
-
-# def check_email(mail):
-#     """เช็คอีเมลใหม่และตรวจสอบว่าเป็น Spam หรือไม่"""
-#     email_data = fetch_latest_email(mail)  # ดึงอีเมลล่าสุด
-#     if not email_data:
-#         return
-    
-#     email_body = email_data.get("body", "")
-#     email_subject = email_data.get("subject", "")
-    
-#     if email_body:
-#         is_spam = predict_spam(email_body)
-#         if is_spam:
-#             print("❌ พบอีเมลสแปม!")
-#             print("📌 หัวข้อ:", email_subject)
-#             print("📄 เนื้อหา (บางส่วน):", email_body[:500])  # แสดง 500 ตัวอักษรแรก
-#             create_gui()  # แสดง Popup แจ้งเตือน
-#         else:
-#             print("✅ อีเมลปกติ")
-#     else:
-#         print("⚠️ ไม่พบเนื้อหาอีเมล")
-
-# def listen_for_new_emails():
-#     """ระบบจะเช็คอีเมลใหม่โดยอัตโนมัติเมื่อมีการส่งอีเมลเข้ามา"""
-#     with IMAPClient('imap.gmail.com') as client:
-#         client.login('mindstory483@gmail.com', 'ccccccccx483')
-#         client.select_folder('INBOX')
-
-#         print("[ระบบ] รออีเมลใหม่เข้ามา...")
-#         client.idle()
-
-#         while True:
-#             try:
-#                 responses = client.idle_check(timeout=60)  # รอการแจ้งเตือนการมีอีเมลใหม่
-#                 if responses:
-#                     check_email(client)  # ตรวจสอบอีเมลที่เข้ามาใหม่
-#             except Exception as e:
-#                 print(f"❌ เกิดข้อผิดพลาด: {e}")
-#                 break
-
-# if __name__ == "__main__":
-#     listen_for_new_emails()
-
-# import time
-# import pickle
-# from GmailConnect import connect_imap, fetch_latest_email  # ใช้เชื่อมต่อ Gmail
-# from Popup import create_gui  # ใช้แสดง Popup แจ้งเตือน
-
-# # --- โหลดโมเดลที่ฝึกจาก updated_data.csv ---
-# with open("spam_model.pkl", "rb") as model_file:
-#     model, vectorizer = pickle.load(model_file)
-
-# print("✅ โมเดลจาก updated_data.csv โหลดสำเร็จ!")
-
-# def predict_spam(email_text):
-#     """ใช้โมเดลที่ฝึกไว้ทำนายว่าอีเมลเป็นสแปมหรือไม่"""
-#     X_new = vectorizer.transform([email_text])
-#     prediction = model.predict(X_new)[0]  # 1 = Spam, 0 = Not Spam
-#     return prediction
-
-# def check_email():
-#     """เช็คอีเมลใหม่และตรวจสอบว่าเป็น Spam หรือไม่"""
-#     mail = connect_imap()  # เชื่อมต่อ Gmail
-#     if not mail:
-#         print("❌ ไม่สามารถเชื่อมต่อ Gmail ได้!")
-#         return
-    
-#     email_data = fetch_latest_email(mail)  # ดึงอีเมลล่าสุด
-#     email_body = email_data.get("body", "")
-#     email_subject = email_data.get("subject", "")
-    
-#     if email_body:
-#         is_spam = predict_spam(email_body)
-#         if is_spam:
-#             print("❌ พบอีเมลสแปม!")
-#             print("📌 หัวข้อ:", email_subject)
-#             print("📄 เนื้อหา (บางส่วน):", email_body[:500])  # แสดง 500 ตัวอักษรแรก
-#             create_gui()  # แสดง Popup แจ้งเตือน
-#         else:
-#             print("✅ อีเมลปกติ")
-#     else:
-#         print("⚠️ ไม่พบเนื้อหาอีเมล")
-
-# def auto_check():
-#     """ระบบตรวจสอบอีเมลอัตโนมัติทุก 5 นาที"""
-#     while True:
-#         print("\n[ระบบ] กำลังตรวจสอบอีเมลใหม่...")
-#         check_email()
-#         time.sleep(300)  # รอ 5 นาทีแล้วตรวจใหม่
-
-# if __name__ == "__main__":
-#     auto_check()
-
-import time
+import pandas as pd
 import pickle
+import time
 import imaplib
 import email
-from GmailConnect import connect_imap  # ใช้เชื่อมต่อ Gmail
-from Popup import create_gui  # ใช้แสดง Popup แจ้งเตือน
+from GmailConnect import connect_imap
+from Popup import create_gui
 
-# --- โหลดโมเดลที่ฝึกจาก updated_data.csv ---
+# -----------------------------
+# โหลดโมเดล
+# -----------------------------
 with open("spam_model.pkl", "rb") as model_file:
     model, vectorizer = pickle.load(model_file)
 
-print("✅ โมเดลจาก updated_data.csv โหลดสำเร็จ!")
+print("✅ โหลดโมเดลสำเร็จ!")
+
 
 def predict_spam(email_text):
-    """ใช้โมเดลที่ฝึกไว้ทำนายว่าอีเมลเป็นสแปมหรือไม่"""
     X_new = vectorizer.transform([email_text])
-    prediction = model.predict(X_new)[0]  # 1 = Spam, 0 = Not Spam
+    prediction = model.predict(X_new)[0]
     return prediction
 
+
+# -----------------------------
+# ทดสอบโมเดลกับ updated_data.csv พร้อมแสดงแถว
+# -----------------------------
+def test_model_with_updated_data():
+    print("\n🧪 ทดสอบโมเดลกับข้อมูลจาก updated_data.csv")
+
+    try:
+        df = pd.read_csv("updated_data.csv")
+        print("✅ โหลดไฟล์ updated_data.csv สำเร็จ")
+
+        # ตรวจสอบจำนวน label
+        print("\n🧮 จำนวน label ใน updated_data.csv:")
+        print(df["spam"].value_counts())
+
+        if df[df["spam"] == 0].shape[0] < 3 or df[df["spam"] == 1].shape[0] < 3:
+            print("⚠️ ไม่พบข้อมูล label=0 หรือ label=1 เพียงพอในการสุ่ม")
+            return
+
+        non_spam = df[df["spam"] == 0].sample(3)
+        spam = df[df["spam"] == 1].sample(3)
+
+        print("\n📧 ทดสอบ Non-Spam:")
+        for idx, row in non_spam.iterrows():
+            text = row["text"]
+            pred = predict_spam(text)
+            print(f"🟢 Row: {idx}")
+            print(f"✅ [label=0] → {'Spam ❌' if pred == 1 else 'Not Spam ✅'}")
+            print(f"   ตัวอย่างข้อความ: {text[:100]}...\n")
+
+        print("📧 ทดสอบ Spam:")
+        for idx, row in spam.iterrows():
+            text = row["text"]
+            pred = predict_spam(text)
+            print(f"🔴 Row: {idx}")
+            print(f"❌ [label=1] → {'Spam ✅' if pred == 1 else 'Not Spam ❌'}")
+            print(f"   ตัวอย่างข้อความ: {text[:100]}...\n")
+
+    except FileNotFoundError:
+        print("❌ ไม่พบไฟล์ updated_data.csv")
+    except Exception as e:
+        print(f"❌ เกิดข้อผิดพลาด: {e}")
+
+
+# -----------------------------
+# ฟังอีเมลจาก Gmail (เปิดใช้เมื่อพร้อม)
+# -----------------------------
 def fetch_new_email(mail):
-    """ดึงอีเมลใหม่ล่าสุด"""
-    mail.select("inbox")  # เลือกกล่องจดหมายเข้า
-    result, data = mail.search(None, "UNSEEN")  # ค้นหาอีเมลที่ยังไม่ได้อ่าน
-    
+    mail.select("inbox")
+    result, data = mail.search(None, "UNSEEN")
+
     if result == "OK" and data[0]:
-        latest_email_id = data[0].split()[-1]  # ดึง ID ของอีเมลล่าสุด
-        result, msg_data = mail.fetch(latest_email_id, "(RFC822)")  # ดึงข้อมูล
-        
+        latest_email_id = data[0].split()[-1]
+        result, msg_data = mail.fetch(latest_email_id, "(RFC822)")
+
         if result == "OK":
-            raw_email = msg_data[0][1]  # ดึงข้อมูลเมลดิบ
-            msg = email.message_from_bytes(raw_email)  # แปลงเป็น object
-            
+            raw_email = msg_data[0][1]
+            msg = email.message_from_bytes(raw_email)
             subject = msg["subject"] if msg["subject"] else "(No Subject)"
             body = ""
 
@@ -153,35 +90,41 @@ def fetch_new_email(mail):
 
             return {"subject": subject, "body": body}
 
-    return None  # ไม่มีอีเมลใหม่
+    return None
+
 
 def listen_for_new_email():
-    """ใช้ IMAP IDLE เพื่อฟังอีเมลใหม่ และแจ้งเตือนทันที"""
-    mail = connect_imap()  # เชื่อมต่อ Gmail
+    mail = connect_imap()
     if not mail:
         print("❌ ไม่สามารถเชื่อมต่อ Gmail ได้!")
         return
-    
+
     print("🔄 ระบบกำลังรออีเมลใหม่... (IMAP IDLE)")
 
     while True:
         mail.select("inbox")
-        mail.send(b"IDLE\r\n")  # เข้าโหมดรอแจ้งเตือน
-        time.sleep(1)  # รอการแจ้งเตือน
+        mail.send(b"IDLE\r\n")
+        time.sleep(1)
 
-        email_data = fetch_new_email(mail)  # ดึงอีเมลใหม่
+        email_data = fetch_new_email(mail)
         if email_data:
             email_body = email_data["body"]
             email_subject = email_data["subject"]
-            
+
             is_spam = predict_spam(email_body)
             if is_spam:
                 print("❌ พบอีเมลสแปม!")
                 print("📌 หัวข้อ:", email_subject)
-                print("📄 เนื้อหา (บางส่วน):", email_body[:500])  # แสดง 500 ตัวอักษรแรก
-                create_gui()  # แสดง Popup แจ้งเตือน
+                print("📄 เนื้อหา (บางส่วน):", email_body[:500])
+                create_gui()
             else:
                 print("✅ อีเมลปกติ:", email_subject)
 
+
+# -----------------------------
+# Main
+# -----------------------------
 if __name__ == "__main__":
-    listen_for_new_email()
+    # test_model_with_updated_data()     # ✅ ทดสอบ model พร้อม row
+    listen_for_new_email()          # 🔄 เปิดเมื่อจะใช้กับอีเมลจริง
+
