@@ -1,0 +1,91 @@
+.GridWrapper {
+    display: grid;
+    background-color: #ffffff;
+    grid-template-columns: 55fr 45fr;
+    grid-template-rows: 200px auto ; /* top row smaller */
+    height: 100vh;
+}
+
+.Topleftbox {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: right;
+    align-items: flex;
+    justify-content: top;
+    padding: 80px;
+}
+
+
+.Textdetectmachine {
+    transform: rotate(-90px); /* rotate as needed */
+  font-size: 30px;
+  font-weight:bold;
+}
+
+.Toprightbox {
+    background-color:#2f2626 ;
+    display: flex;
+    justify-content: left;
+    align-items: flex;
+    justify-content: top;
+    padding: 70px;
+}
+
+.TextXspam1{
+    font-weight: bold;
+    font-size: 30px;    
+    
+}
+
+.TextXspam2{
+    font-size: 28px;
+}
+
+.Bottomleftbox{
+    margin-left: 200px;
+    background-color: #2f2626;
+    color: white;
+    border-top-left-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    padding: 10rem;
+    text-align: left;
+    margin-top: -180;
+}
+
+.Bottomrightbox{
+    margin-right: 200px;
+    background-color: #ffffff;
+    color: #2f2626;
+    border-top-right-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    padding: 9.58rem;
+    text-align: left;
+    margin-top: -180;
+}
+
+.Bottomrightboxbg{
+    background-color: #2f2626;
+    margin-top: -180;
+}
+
+.Bookpic {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: 100px;
+    margin-bottom: 0px;
+}
+
+.Robotpic{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-left: 100px;
+    margin-bottom: 0px;
+}
