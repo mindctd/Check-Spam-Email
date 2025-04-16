@@ -1,4 +1,5 @@
 import React from "react";
+import ImageSlider from "./ImageSlider";
 import "./App.css";
 
 export default function App() {
@@ -71,28 +72,33 @@ export default function App() {
         </div>
       </section>
 
-    <section className="bg-[#e75d5d] py-12 px-4 flex flex-col h-[450px]">
-      <h2 className="font-serif text-white text-2xl mb-6">DOWNLOAD</h2>
+      <section className="bg-[#e75d5d] py-12 px-4 h-[450px] flex relative">
+  <div className="absolute top-12 left-4 flex flex-col">
+    <h2 className="font-serif text-white text-2xl mb-6">DOWNLOAD</h2>
+    <a
+      href="https://github.com/mindctd/Check-Spam-Email.git"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="border border-white text-white rounded-lg px-4 py-2 w-fit hover:bg-white hover:text-[#e75d5d] transition mb-4"
+    >
+      Download AI (version 1)
+    </a>
 
-      <a
-        href="https://github.com/mindctd/Check-Spam-Email.git"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="border border-white text-white rounded-lg px-4 py-2 w-fit hover:bg-white hover:text-[#e75d5d] transition mb-4"
-      >
-        Download AI (version 1)
-      </a>
+    <a
+      href="src/components/How to download Xspam.pdf"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="border border-white text-white rounded-lg px-4 py-2 w-fit hover:bg-white hover:text-[#e75d5d] transition"
+    >
+      How to dowload Xspam
+    </a>
+  </div>
 
-      <a
-        href="src\components\How to download Xspam.pdf"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="border border-white text-white rounded-lg px-4 py-2 w-fit hover:bg-white hover:text-[#e75d5d] transition"
-      >
-        How to dowload Xspam
-      </a>
-    </section>
+  <div className="w-[600px] h-[800px] ml-auto">
+    <ImageSlider />
+  </div>
 
+</section>
 
 
       {/* --- Footer Section --- */}
