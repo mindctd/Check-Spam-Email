@@ -99,7 +99,7 @@ export default function App() {
       <footer className="bg-[#2f2626] text-white py-10 px-6">
         <div className="flex flex-col md:flex-row justify-between items-center text-sm">
           <div className="mb-6 md:mb-0">
-            <h3 className="font-bold text-lg mb-2">TULPAR</h3>
+            <h3 className="font-bold text-lg mb-2">Xspam</h3>
             <p>©Xspam AI 2025</p>
           </div>
 
