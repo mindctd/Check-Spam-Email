@@ -71,10 +71,17 @@ export default function App() {
         </div>
       </section>
 
-      {/* --- Middle Section (Download) --- */}
       <section className="bg-[#e75d5d] py-12 px-4 flex flex-col h-[450px]">
-        <h2 className="font-serif text-white text-2xl mb-6">DOWNLOAD</h2>
-      </section>
+  <h2 className="font-serif text-white text-2xl mb-6">DOWNLOAD</h2>
+  <a
+    href="https://github.com/mindctd/Check-Spam-Email.git"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="border border-white text-white rounded-lg px-4 py-2 w-fit hover:bg-white hover:text-[#e75d5d] transition"
+  >
+    Download AI(version 1)
+  </a>
+</section>
 
       {/* --- Footer Section --- */}
       <footer className="bg-[#2f2626] text-white py-10 px-6">
