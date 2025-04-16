@@ -79,7 +79,7 @@
     bottom: 0;
     right: 0;
     margin-right: 100px;
-    margin-bottom: 0px;
+    margin-bottom: -15px;
 }
 
 .Robotpic{
@@ -87,5 +87,5 @@
     bottom: 0;
     left: 0;
     margin-left: 100px;
-    margin-bottom: 0px;
+    margin-bottom: -15px;
 }

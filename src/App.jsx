@@ -72,8 +72,8 @@ export default function App() {
         </div>
       </section>
 
-      <section className="bg-[#e75d5d] py-12 px-4 h-[450px] flex relative">
-  <div className="absolute top-12 left-4 flex flex-col">
+      <section className="bg-[#e75d5d] flex relative">
+  <div className="absolute top-12 left-8 flex flex-col">
     <h2 className="font-serif text-white text-2xl mb-6">DOWNLOAD</h2>
     <a
       href="https://github.com/mindctd/Check-Spam-Email.git"
@@ -94,7 +94,7 @@ export default function App() {
     </a>
   </div>
 
-  <div className="w-[600px] h-[800px] ml-auto">
+  <div className="w-[600px] h-[400px] ml-200 ">
     <ImageSlider />
   </div>
 
